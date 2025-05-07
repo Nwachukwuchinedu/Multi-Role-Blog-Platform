@@ -1,0 +1,27 @@
+{
+  "name": "multi-role-blog-platform",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.5",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vitejs/plugin-vue-jsx": "^4.1.2",
+    "@vueup/vue-quill": "^1.2.0",
+    "axios": "^1.6.2",
+    "jwt-decode": "^4.0.0",
+    "pinia": "^2.1.7",
+    "tailwindcss": "^4.1.5",
+    "vue": "^3.4.38",
+    "vue-router": "^4.2.5",
+    "vue-toastification": "^2.0.0-rc.5"
+  },
+  "devDependencies": {
+    "vite": "^5.4.2"
+  }
+}
