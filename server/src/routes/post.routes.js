@@ -10,26 +10,29 @@ import {
   addComment,
 } from "../controllers/post.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
-import { isAuthorOrAdmin } from "../middleware/role.middleware.js";
-import upload from "../utils/upload.utils.js";
+import {  isAuthorOrAdmin } from "../middleware/role.middleware.js";
+import upload from '../utils/upload.utils.js'
 
 const router = express.Router();
 
-// Public routes (no auth required)
+// All routes are protected
+router.use(protect);
+
+// Public routes
 router.route("/").get(getPosts);
 
 router.route("/:id").get(getPostById);
 
-// Protected: Only logged-in users can interact
-router.route("/").post(protect, upload.single("image"), createPost);
+// Author/Admin routes
+router.route("/").post(upload.single("image"), createPost);
 
 router
   .route("/:id")
-  .put(protect, isAuthorOrAdmin, upload.single("image"), updatePost)
-  .delete(protect, isAuthorOrAdmin, deletePost);
+  .put(isAuthorOrAdmin, upload.single("image"), updatePost)
+  .delete(isAuthorOrAdmin, deletePost);
 
-// Like & Comment Routes (authenticated users only)
-router.post("/like/:id", protect, likePost);
-router.post("/comment/:id", protect, addComment);
+// Interaction routes
+router.post("/like/:id", likePost);
+router.post("/comment/:id", addComment);
 
 export default router;
