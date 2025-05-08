@@ -1,22 +1,20 @@
-// src/services/apiClient.js
-import axios from 'axios'
+import axios from "axios";
+import { useUserStore } from "../stores/useUserStore";
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:5000/api', // Your backend base URL
+  baseURL: "http://localhost:5000/api", // Mock base URL
   headers: {
-    'Content-Type': 'application/json'
-  }
-})
+    "Content-Type": "application/json",
+  },
+});
 
-// Optional: Add interceptor for auth later
-/*
-apiClient.interceptors.request.use(config => {
-  const userStore = useUserStore()
+// Add JWT token to requests
+apiClient.interceptors.request.use((config) => {
+  const userStore = useUserStore();
   if (userStore.token) {
-    config.headers['Authorization'] = `Bearer ${userStore.token}`
+    config.headers["Authorization"] = `Bearer ${userStore.token}`;
   }
-  return config
-})
-*/
+  return config;
+});
 
-export default apiClient
+export default apiClient;
