@@ -33,6 +33,24 @@ const getPosts = async (req, res) => {
   }
 };
 
+const getPostsWithNoLimit = async (req, res) => {
+  try {
+    const searchQuery = req.query.search
+      ? { title: { $regex: req.query.search, $options: "i" } }
+      : {};
+
+    const posts = await Post.find(searchQuery).populate("author", "username");
+
+    const total = await Post.countDocuments(searchQuery);
+
+    res.json({
+      totalPosts: total,
+      posts,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 // @desc    Get post by ID
 // @route   GET /api/posts/:id
 const getPostById = async (req, res) => {
@@ -186,6 +204,7 @@ const addComment = async (req, res) => {
 
 export {
   getPosts,
+  getPostsWithNoLimit,
   getPostById,
   createPost,
   updatePost,
