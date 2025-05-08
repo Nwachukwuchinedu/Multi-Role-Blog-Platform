@@ -13,14 +13,28 @@ connectDB();
 
 const app = express();
 
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
 // Middleware
 app.use(express.json());
 app.use(cors());
-app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(morgan("dev"));
 
 // Serve static uploads folder
-app.use("/uploads", express.static("uploads"));
+app.use(
+  "/uploads",
+  express.static("uploads", {
+    setHeaders: (res) => {
+      res.set("Access-Control-Allow-Origin", "http://localhost:5173");
+    },
+  })
+);
 
 
 // Routes
