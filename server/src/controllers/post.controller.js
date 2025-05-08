@@ -3,15 +3,31 @@ import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import User from "../models/User.js";
 
-
 // @desc    Get all posts
 // @route   GET /api/posts
 const getPosts = async (req, res) => {
   try {
-    const posts = await Post.find()
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 3;
+    const skip = (page - 1) * limit;
+
+    const searchQuery = req.query.search
+      ? { title: { $regex: req.query.search, $options: "i" } }
+      : {};
+
+    const posts = await Post.find(searchQuery)
       .populate("author", "username")
-      .populate("comments");
-    res.json(posts);
+      .skip(skip)
+      .limit(limit);
+
+    const total = await Post.countDocuments(searchQuery);
+
+    res.json({
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalPosts: total,
+      posts,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -32,7 +48,6 @@ const getPostById = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 // @desc    Create new post
 // @route   POST /api/posts
