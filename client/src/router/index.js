@@ -38,6 +38,11 @@ const routes = [
         component: () => import("../pages/NewPost.vue"),
       },
       {
+        path: "posts/edit/:id",
+        name: "EditPost",
+        component: () => import("../pages/EditPost.vue"),
+      },
+      {
         path: "profile",
         name: "Profile",
         component: () => import("../pages/Profile.vue"),
