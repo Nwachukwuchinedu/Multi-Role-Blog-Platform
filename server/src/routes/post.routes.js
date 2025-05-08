@@ -2,6 +2,7 @@
 import express from "express";
 import {
   getPosts,
+  getPostsWithNoLimit,
   getPostById,
   createPost,
   updatePost,
@@ -20,6 +21,8 @@ router.use(protect);
 
 // Public routes
 router.route("/").get(getPosts);
+
+router.route("/nolimit").get(getPostsWithNoLimit);
 
 router.route("/:id").get(getPostById);
 
