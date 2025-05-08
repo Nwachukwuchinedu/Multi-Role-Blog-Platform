@@ -53,6 +53,7 @@
           >
             <option value="reader">Reader</option>
             <option value="author">Author</option>
+            <option value="admin">Admin</option>
           </select>
         </div>
 
@@ -77,9 +78,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import  apiClient  from '../services/apiClient'
+import apiClient from '../services/apiClient'
+import { useUserStore } from '../stores/useUserStore'
 
 const router = useRouter()
+const userStore = useUserStore()
 
 const form = ref({
   username: '',
@@ -90,13 +93,28 @@ const form = ref({
 
 const handleRegister = async () => {
   try {
-    // Simulate API call
     const response = await apiClient.post('/auth/register', form.value)
 
-    showNotification('Registration successful! Please log in.', 'success')
-    setTimeout(() => router.push('/login'), 2000)
+    // Mock login flow (replace with real login if needed)
+    const { _id, username, email, role, token } = response.data
+
+    // Set auth state
+    userStore.setAuth(token, { _id, username, email, role })
+
+    showNotification('Registration successful!', 'success')
+    setTimeout(() => {
+      if (role === 'admin') {
+        router.push('/admin/dashboard')
+      } else if (role === 'author') {
+        router.push('/author/posts')
+      } else {
+        router.push('/')
+      }
+    }, 1500)
+
   } catch (error) {
-    showNotification('Registration failed. Try again.', 'error')
+    const message = error.response?.data?.message || 'Registration failed. Try again.'
+    showNotification(message, 'error')
   }
 }
 
