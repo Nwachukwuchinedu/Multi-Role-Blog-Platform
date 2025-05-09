@@ -13,7 +13,7 @@
     </div>
 
     <!-- Center Links -->
-    <div class="hidden md:flex space-x-6 items-center">
+    <!-- <div class="hidden md:flex space-x-6 items-center">
       <router-link
         v-for="link in navLinks"
         :key="link.name"
@@ -22,19 +22,19 @@
       >
         {{ link.name }}
       </router-link>
-    </div>
+    </div> -->
 
     <!-- Right Side - Auth & Theme Toggle -->
     <div class="flex items-center space-x-4">
       <!-- Dark Mode Toggle -->
-      <button
+      <!-- <button
         @click="toggleDarkMode"
         class="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none transition-all duration-300"
         aria-label="Toggle dark mode"
       >
         <span v-if="isDarkMode">☀️</span>
         <span v-else>🌙</span>
-      </button>
+      </button> -->
 
       <!-- Authenticated User -->
       <div v-if="userStore.isAuthenticated" class="relative">
