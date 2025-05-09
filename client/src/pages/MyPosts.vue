@@ -1,7 +1,7 @@
-<!-- src/pages/MyPosts.vue -->
 <template>
   <div class="max-w-5xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+    <!-- Page Title -->
+    <h1 class="text-2xl font-bold font-title text-gray-900 dark:text-white mb-6">
       My Posts
     </h1>
 
@@ -9,7 +9,7 @@
     <div class="mb-6">
       <router-link
         to="/author/posts/new"
-        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200"
+        class="inline-flex items-center px-4 py-2 bg-primary hover:bg-indigo-700 text-white rounded-md transition-colors duration-200 shadow-sm"
       >
         + New Post
       </router-link>
@@ -21,10 +21,7 @@
     </div>
 
     <!-- Error State -->
-    <div
-      v-else-if="error"
-      class="text-center py-12 text-red-500 dark:text-red-400"
-    >
+    <div v-else-if="error" class="text-center py-12 text-red-500 dark:text-red-400">
       {{ error }}
     </div>
 
@@ -33,26 +30,38 @@
       <div
         v-for="post in posts"
         :key="post._id"
-        class="border border-gray-200 dark:border-gray-700 rounded-md p-4 flex justify-between items-center"
+        class="flex flex-col md:flex-row md:items-center p-4 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 hover:shadow-md transition-shadow duration-300"
       >
-        <div>
-          <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+        <!-- Image Preview -->
+        <div class="md:w-20 md:h-20 w-full h-24 mb-4 md:mb-0 md:mr-4 flex-shrink-0 overflow-hidden rounded-md">
+          <img
+            :src="`${apiUrl}${post.image?.url}`"
+            :alt="post.title"
+            class="w-full h-full object-cover"
+          />
+        </div>
+
+        <!-- Post Info -->
+        <div class="md:flex-1">
+          <h2 class="text-lg font-semibold font-heading text-gray-900 dark:text-white">
             {{ post.title }}
           </h2>
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+          <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
             {{ formatDate(post.createdAt) }}
           </p>
         </div>
-        <div class="flex space-x-2">
+
+        <!-- Actions -->
+        <div class="mt-4 md:mt-0 flex space-x-4">
           <button
             @click="router.push(`/author/posts/edit/${post._id}`)"
-            class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+            class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-sans transition-colors"
           >
             Edit
           </button>
           <button
             @click="deletePost(post._id)"
-            class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+            class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-sans transition-colors"
           >
             Delete
           </button>
@@ -63,12 +72,13 @@
     <!-- Empty State -->
     <div
       v-if="!loading && posts.length === 0"
-      class="text-center py-10 text-gray-500 dark:text-gray-400"
+      class="text-center py-10 text-gray-500 dark:text-gray-400 font-sans"
     >
       You haven’t written any posts yet.
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'

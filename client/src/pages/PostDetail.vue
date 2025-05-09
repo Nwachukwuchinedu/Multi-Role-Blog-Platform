@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-3xl mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto px-4 py-10">
     <!-- Loading State -->
     <div v-if="loading" class="text-center py-12">
       <Loader />
@@ -8,71 +8,68 @@
     <!-- Error State -->
     <div
       v-else-if="error"
-      class="text-center py-12 text-red-500 dark:text-red-400"
+      class="text-center py-12 text-red-500 dark:text-red-400 font-sans"
     >
       {{ error }}
     </div>
 
     <!-- Post Content -->
-    <div v-else>
+    <div v-else class="space-y-8 animate-fade-in-up">
       <!-- Post Header -->
-      <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+      <header class="space-y-2 text-center md:text-left">
+        <h1 class="gradient-text text-4xl font-title font-extrabold leading-tight">
           {{ post.title }}
         </h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">
+        <p class="text-sm font-heading text-gray-600 dark:text-gray-400">
           By {{ post.author }} • {{ formatDate(post.createdAt) }}
         </p>
-      </div>
+      </header>
 
-      <!-- Post Image -->
-      <div v-if="post.image" class="mb-6">
+      <!-- Featured Image -->
+      <section v-if="post.image" class="glass-card overflow-hidden rounded-xl">
         <img
           :src="`${apiUrl}${post.image.url}`"
           :alt="post.image.alt || 'Post Image'"
-          class="w-full h-auto rounded-md shadow"
+          class="w-full h-auto object-cover"
         />
-      </div>
+      </section>
 
-      <!-- Post Content -->
-      <div
-        class="prose dark:prose-invert max-w-none mb-8"
-        v-html="post.content"
-      ></div>
+      <!-- Rich Post Content -->
+      <article class="prose dark:prose-invert max-w-none font-sans">
+        <div v-html="post.content"></div>
+      </article>
 
       <!-- Like Button -->
-      <div class="flex items-center space-x-2 mb-6">
-        <button
-          @click="likePost"
-          class="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400"
-        >
-          <span>❤️</span>
-          <span>{{ post.likes }}</span>
-        </button>
-      </div>
+      <footer class="mt-10 border-t dark:border-gray-700 pt-6 flex justify-between items-center">
+        <div class="flex items-center space-x-2">
+          <button
+            @click="likePost"
+            class="flex items-center space-x-1 text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition-colors duration-300"
+          >
+            <span>❤️</span>
+            <span>{{ post.likes }}</span>
+          </button>
+        </div>
+      </footer>
 
       <!-- Comments Section -->
-      <section>
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-          Comments
-        </h2>
+      <section class="mt-12">
+        <h2 class="text-2xl font-heading font-semibold text-gray-900 dark:text-white mb-6">Comments</h2>
         <CommentThread :comments="commentsWithAuthors" />
       </section>
 
-      <!-- Comment Form -->
-      <section class="mt-8">
-        <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">
-          Leave a comment
-        </h3>
+      <!-- Add New Comment -->
+      <section class="mt-10 pt-6 border-t dark:border-gray-700">
+        <h3 class="text-lg font-heading font-semibold text-gray-800 dark:text-white mb-4">Leave a comment</h3>
         <textarea
           v-model="newCommentText"
           rows="3"
-          placeholder="Write your comment..."
-          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+          placeholder="Write your thoughts..."
+          class="w-full px-4 py-3 bg-transparent border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-2 focus:ring-primary focus:outline-none dark:bg-gray-800 dark:text-white font-sans"
         ></textarea>
         <button
           @click="addComment"
-          class="mt-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-200"
+          class="mt-3 px-5 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-heading font-medium rounded-md hover:shadow-lg transform transition-all duration-200 hover:scale-105"
         >
           Submit Comment
         </button>
@@ -84,29 +81,30 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
+import apiClient from "../services/apiClient";
 import CommentThread from "../components/CommentThread.vue";
 import Loader from "../components/Loader.vue";
-import apiClient from "../services/apiClient";
 
 const route = useRoute();
 const postId = route.params.id;
-const apiUrl = import.meta.env.VITE_API_URL
-const authorMap = ref({});
+const apiUrl = import.meta.env.VITE_API_URL;
 
 // Real post data
 const post = ref(null);
 const loading = ref(true);
 const error = ref(null);
 
-// New comment input
-const newCommentText = ref("");
-
+// Author mapping
+const authorMap = ref({});
 const commentsWithAuthors = computed(() => {
   return post.value.comments.map((comment) => ({
     ...comment,
     author: authorMap.value[comment.authorId] || "Loading...",
   }));
 });
+
+// New comment input
+const newCommentText = ref("");
 
 // Fetch username from backend
 const fetchAuthorName = async (userId) => {
@@ -123,9 +121,10 @@ const fetchAuthorName = async (userId) => {
 const fetchPost = async () => {
   try {
     const response = await apiClient.get(`/posts/${postId}`);
+
     const data = response.data;
 
-    // Map backend response to expected structure
+    // Map backend response
     post.value = {
       id: data._id,
       title: data.title,
@@ -133,19 +132,14 @@ const fetchPost = async () => {
       author: data.author.username,
       likes: data.likes.length,
       createdAt: data.createdAt,
-      image: data.image?.url
-        ? {
-            url: data.image.url,
-            alt: data.image.alt,
-          }
-        : null,
+      image: data.image?.url ? { url: data.image.url, alt: data.image.alt } : null,
       comments: data.comments.map((comment) => ({
         id: comment._id,
         authorId: comment.author,
         text: comment.text,
         date: comment.createdAt,
-        likes: comment.likes.length,
-      })),
+        likes: comment.likes.length
+      }))
     };
 
     loading.value = false;
@@ -158,6 +152,7 @@ const fetchPost = async () => {
     for (const id of userIds) {
       await fetchAuthorName(id);
     }
+
   } catch (err) {
     error.value = "Failed to load post.";
     loading.value = false;
@@ -173,10 +168,7 @@ onMounted(() => {
 const likePost = async () => {
   try {
     await apiClient.post(`/posts/like/${postId}`);
-
-    // Re-fetch full post with updated author info
-    await fetchPost();
-
+    await fetchPost(); // Refresh post data
     showNotification("You liked this post!", "success");
   } catch (err) {
     showNotification("Like failed. Try again.", "error");
@@ -189,28 +181,24 @@ const addComment = async () => {
   if (!text) return;
 
   try {
-    const response = await apiClient.post(`/posts/comment/${postId}`, {
-      text,
-    });
+    const response = await apiClient.post(`/posts/comment/${postId}`, { text });
 
     const newComment = {
       id: response.data._id,
       authorId: response.data.author,
       text,
       date: response.data.createdAt,
-      likes: 0,
+      likes: 0
     };
 
-    // Add new comment
     post.value.comments.unshift(newComment);
+    newCommentText.value = "";
+    showNotification("Your comment was added!", "success");
 
-    // Fetch username for new comment author
     if (!authorMap.value[newComment.authorId]) {
       await fetchAuthorName(newComment.authorId);
     }
 
-    newCommentText.value = "";
-    showNotification("Your comment was added!", "success");
   } catch (err) {
     showNotification("Failed to submit comment", "error");
   }

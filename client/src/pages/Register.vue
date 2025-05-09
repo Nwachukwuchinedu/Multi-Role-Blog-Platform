@@ -1,10 +1,11 @@
-<!-- src/pages/Register.vue -->
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-4">
-    <div class="max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <div class="max-w-md w-full bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6 transition-all duration-300">
+      <!-- Logo / Title -->
       <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">Create Account</h2>
 
-      <form @submit.prevent="handleRegister" class="space-y-4">
+      <!-- Form -->
+      <form @submit.prevent="handleRegister" class="space-y-5">
         <!-- Username -->
         <div>
           <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Username</label>
@@ -14,7 +15,7 @@
             type="text"
             required
             placeholder="johndoe"
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           />
         </div>
 
@@ -27,7 +28,7 @@
             type="email"
             required
             placeholder="you@example.com"
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           />
         </div>
 
@@ -40,7 +41,7 @@
             type="password"
             required
             placeholder="••••••••"
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           />
         </div>
 
@@ -49,7 +50,7 @@
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">I want to register as:</label>
           <select
             v-model="form.role"
-            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
           >
             <option value="reader">Reader</option>
             <option value="author">Author</option>
@@ -60,16 +61,21 @@
         <!-- Submit Button -->
         <button
           type="submit"
-          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200"
+          class="w-full mt-2 py-3 font-semibold bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-md hover:shadow-md transform transition-all duration-200 hover:scale-105"
         >
           Register
         </button>
       </form>
 
       <!-- Login Link -->
-      <p class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+      <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400 font-sans">
         Already have an account?
-        <router-link to="/login" class="text-blue-600 hover:underline dark:text-blue-400">Login</router-link>
+        <router-link
+          to="/login"
+          class="font-medium text-primary dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300 ml-1"
+        >
+          Log in
+        </router-link>
       </p>
     </div>
   </div>

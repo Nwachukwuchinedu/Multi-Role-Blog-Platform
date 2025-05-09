@@ -1,10 +1,10 @@
-<!-- src/pages/NewPost.vue -->
 <template>
   <div class="max-w-3xl mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">Write a New Post</h1>
+    <!-- Title -->
+    <h1 class="text-2xl font-bold font-title text-gray-900 dark:text-white mb-6">Write a New Post</h1>
 
     <!-- Form -->
-    <form @submit.prevent="submitPost" class="space-y-6">
+    <form @submit.prevent="submitPost" class="space-y-6 bg-white dark:bg-gray-800 shadow rounded-lg p-6">
       <!-- Title -->
       <div>
         <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Post Title</label>
@@ -14,7 +14,7 @@
           type="text"
           placeholder="What's this post about?"
           required
-          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
         />
       </div>
 
@@ -27,7 +27,7 @@
           rows="10"
           placeholder="Start writing..."
           required
-          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white transition-colors duration-200"
         ></textarea>
       </div>
 
@@ -39,7 +39,7 @@
           v-model="post.tags"
           type="text"
           placeholder="e.g. vue,express,blog"
-          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
         />
       </div>
 
@@ -51,7 +51,7 @@
           type="file"
           accept="image/*"
           @change="onImageChange"
-          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm dark:bg-gray-700 dark:text-white"
+          class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
         />
         <small class="text-gray-500 dark:text-gray-400 mt-1 block">Supported formats: JPG, PNG, GIF</small>
       </div>
@@ -60,15 +60,15 @@
       <button
         type="submit"
         :disabled="loading"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="w-full mt-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold rounded-md hover:shadow-lg transform transition-all duration-200 hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
       >
-        {{ loading ? 'Saving...' : 'Save Post' }}
+        {{ loading ? "Saving..." : "Save Post" }}
       </button>
     </form>
 
     <!-- Preview Section -->
-    <section v-if="post.image" class="mt-6">
-      <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-300 mb-2">Preview Image</h2>
+    <section v-if="post.image" class="mt-8 bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+      <h2 class="text-lg font-heading font-semibold text-gray-800 dark:text-gray-300 mb-4">Preview Image</h2>
       <img
         :src="post.image"
         alt="Featured image preview"
