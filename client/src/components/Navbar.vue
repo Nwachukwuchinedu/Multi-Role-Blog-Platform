@@ -8,7 +8,7 @@
         to="/"
         class="gradient-text text-2xl font-title font-bold tracking-tight"
       >
-        BlogPlatform
+        Bl
       </router-link>
     </div>
 
