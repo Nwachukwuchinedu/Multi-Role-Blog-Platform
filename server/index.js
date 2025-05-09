@@ -14,7 +14,7 @@ connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:5173"],
+  origin: ["http://localhost:5173", "https://multi-role-blog-platform.onrender.com"],
   optionsSuccessStatus: 200,
 };
 
@@ -31,7 +31,11 @@ app.use(
   "/public",
   express.static("public", {
     setHeaders: (res) => {
-      res.set("Access-Control-Allow-Origin", "http://localhost:5173");
+      res.set(
+        "Access-Control-Allow-Origin",
+        "http://localhost:5173",
+        "VITE_API_URL=https://multi-role-blog-platform.onrender.com"
+      );
     },
   })
 );
