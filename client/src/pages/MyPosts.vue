@@ -5,8 +5,17 @@
       My Posts
     </h1>
 
-    <!-- Create New Post Button -->
-    <div class="mb-6">
+    <!-- Button Row -->
+    <div class="mb-6 flex space-x-4">
+      <!-- My Posts Button (Just a label or link if needed) -->
+      <router-link
+        to="/author/posts"
+        class="inline-flex items-center px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-md transition-colors duration-200 shadow-sm"
+      >
+        My Posts
+      </router-link>
+
+      <!-- New Post Button -->
       <router-link
         to="/author/posts/new"
         class="inline-flex items-center px-4 py-2 bg-primary hover:bg-indigo-700 text-white rounded-md transition-colors duration-200 shadow-sm"

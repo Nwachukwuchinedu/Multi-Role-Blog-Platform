@@ -28,8 +28,8 @@ const routes = [
 
   {
     path: "/author",
-    component: AuthorLayout,
-    meta: { requiresAuth: true, requiresAuthor: true },
+    // component: AuthorLayout,
+    // meta: { requiresAuth: true, requiresAuthor: true },
     children: [
       { path: "posts", name: "MyPosts", component: MyPosts },
       {
