@@ -28,8 +28,8 @@ app.use(morgan("dev"));
 
 // Serve static uploads folder
 app.use(
-  "/uploads",
-  express.static("uploads", {
+  "/public",
+  express.static("public", {
     setHeaders: (res) => {
       res.set("Access-Control-Allow-Origin", "http://localhost:5173");
     },
