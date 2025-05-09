@@ -10,7 +10,7 @@
       </p>
     </header>
 
-    <!-- Stats Section (Optional) -->
+    <!-- Stats Section -->
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
       <div
         class="bg-white dark:bg-gray-800 shadow rounded-lg p-6 flex items-center justify-between"
@@ -100,7 +100,7 @@
           </thead>
           <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
             <tr
-              v-for="user in users"
+              v-for="user in paginatedUsers"
               :key="user._id"
               class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
             >
@@ -123,7 +123,7 @@
                 <button
                   @click="banUser(user._id)"
                   :disabled="user.role === 'admin'"
-                  class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-heading transition-colors"
+                  class="text-sm bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md transition-colors"
                 >
                   {{ user.banned ? "Unban" : "Ban" }}
                 </button>
@@ -131,6 +131,30 @@
             </tr>
           </tbody>
         </table>
+
+        <!-- User Pagination -->
+        <div
+          v-if="users.length > usersPerPage"
+          class="flex justify-between items-center mt-4 px-4 pb-4"
+        >
+          <button
+            @click="prevPage('users')"
+            :disabled="currentPage.users <= 1"
+            class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span class="text-sm text-gray-600 dark:text-gray-400">
+            Page {{ currentPage.users }} of {{ totalPages.users }}
+          </span>
+          <button
+            @click="nextPage('users')"
+            :disabled="currentPage.users >= totalPages.users"
+            class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </section>
 
@@ -143,7 +167,7 @@
       </h2>
       <div class="space-y-4">
         <div
-          v-for="post in posts"
+          v-for="post in paginatedPosts"
           :key="post._id"
           class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-4 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 hover:shadow-md transition-shadow duration-200"
         >
@@ -165,19 +189,51 @@
           </div>
         </div>
       </div>
+
+      <!-- Post Pagination -->
+      <div
+        v-if="posts.length > postsPerPage"
+        class="flex justify-between items-center mt-4 px-4 pb-4"
+      >
+        <button
+          @click="prevPage('posts')"
+          :disabled="currentPage.posts <= 1"
+          class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span class="text-sm text-gray-600 dark:text-gray-400">
+          Page {{ currentPage.posts }} of {{ totalPages.posts }}
+        </span>
+        <button
+          @click="nextPage('posts')"
+          :disabled="currentPage.posts >= totalPages.posts"
+          class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
     </section>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import apiClient from "../services/apiClient";
 
 const users = ref([]);
 const posts = ref([]);
-const recentActivity = ref("No recent activity"); // Define recentActivity with a default value
+const recentActivity = ref("No recent activity");
 const loading = ref(true);
 const error = ref(null);
+
+// Pagination state
+const currentPage = ref({
+  users: 1,
+  posts: 1,
+});
+const usersPerPage = 10;
+const postsPerPage = 10;
 
 // Fetch data
 const fetchData = async () => {
@@ -192,7 +248,7 @@ const fetchData = async () => {
       ...p,
       author: p.author || { username: "Unknown" },
     }));
-    recentActivity.value = "Fetched data successfully"; 
+    recentActivity.value = "Fetched data successfully";
     loading.value = false;
   } catch (err) {
     console.error("Failed to load dashboard data:", err);
@@ -242,21 +298,34 @@ function formatDate(date) {
   });
 }
 
-// Toast Notification
-function showNotification(message, type = "success") {
-  const container = document.createElement("div");
-  container.className = `
-    fixed bottom-4 right-4 px-4 py-2 rounded-md shadow-lg z-50
-    ${type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"}
-    transform transition-all duration-300 ease-in-out
-    animate-fade-in-up
-  `;
-  container.textContent = message;
-  document.body.appendChild(container);
+// Pagination helpers
+const paginatedUsers = computed(() => {
+  const start = (currentPage.value.users - 1) * usersPerPage;
+  const end = start + usersPerPage;
+  return users.value.slice(start, end);
+});
 
-  setTimeout(() => {
-    container.classList.add("opacity-0", "translate-y-2");
-    setTimeout(() => container.remove(), 300);
-  }, 2500);
+const paginatedPosts = computed(() => {
+  const start = (currentPage.value.posts - 1) * postsPerPage;
+  const end = start + postsPerPage;
+  return posts.value.slice(start, end);
+});
+
+const totalPages = computed(() => ({
+  users: Math.ceil(users.value.length / usersPerPage),
+  posts: Math.ceil(posts.value.length / postsPerPage),
+}));
+
+// Pagination actions
+function nextPage(section) {
+  if (currentPage.value[section] < totalPages.value[section]) {
+    currentPage.value[section]++;
+  }
+}
+
+function prevPage(section) {
+  if (currentPage.value[section] > 1) {
+    currentPage.value[section]--;
+  }
 }
 </script>
