@@ -8,12 +8,12 @@
         to="/"
         class="gradient-text text-2xl font-title font-bold tracking-tight"
       >
-        Bl
+        Bl&Phi;g
       </router-link>
     </div>
 
     <!-- Center Links -->
-    <!-- <div class="hidden md:flex space-x-6 items-center">
+    <div class="hidden md:flex space-x-6 items-center">
       <router-link
         v-for="link in navLinks"
         :key="link.name"
@@ -22,23 +22,26 @@
       >
         {{ link.name }}
       </router-link>
-    </div> -->
+    </div>
 
     <!-- Right Side - Auth & Theme Toggle -->
     <div class="flex items-center space-x-4">
       <!-- Dark Mode Toggle -->
-      <!-- <button
+      <button
         @click="toggleDarkMode"
         class="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none transition-all duration-300"
         aria-label="Toggle dark mode"
       >
         <span v-if="isDarkMode">☀️</span>
         <span v-else>🌙</span>
-      </button> -->
+      </button>
 
       <!-- Authenticated User -->
-      <div v-if="userStore.isAuthenticated" class="relative group">
-        <div class="flex items-center space-x-2 cursor-pointer">
+      <div v-if="userStore.isAuthenticated" class="relative">
+        <div
+          @click="toggleDropdown"
+          class="flex items-center space-x-2 cursor-pointer p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 md:p-0"
+        >
           <!-- Avatar or Initials -->
           <div
             class="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center text-sm font-sans"
@@ -46,7 +49,7 @@
             {{ userStore.user.username.charAt(0).toUpperCase() }}
           </div>
 
-          <!-- Username -->
+          <!-- Username (only on desktop) -->
           <span
             class="hidden md:inline-block font-heading text-gray-900 dark:text-white"
           >
@@ -54,9 +57,10 @@
           </span>
         </div>
 
-        <!-- Dropdown -->
+        <!-- Dropdown (visible on click, not just hover) -->
         <div
-          class="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+          v-show="isDropdownOpen"
+          class="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 shadow-md rounded-md overflow-hidden z-50 transition-all duration-200"
         >
           <button
             @click="logout"
@@ -68,20 +72,16 @@
       </div>
 
       <!-- Guest -->
-      <div
-        v-else
-        class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3"
-      >
+      <div v-else class="flex space-x-3">
         <router-link
           to="/login"
-          class="px-4 py-1.5 text-sm font-heading text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-200"
+          class="hidden md:block text-sm font-heading text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-blue-400 transition-colors duration-200"
         >
           Login
         </router-link>
-
         <router-link
           to="/register"
-          class="px-4 py-1.5 text-sm font-semibold font-heading bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-md hover:shadow-md transition-all duration-200"
+          class="text-sm font-semibold font-heading bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-1.5 rounded-full hover:shadow-md transition-all duration-200"
         >
           Register
         </router-link>
@@ -98,36 +98,60 @@ import { useUserStore } from "../stores/useUserStore";
 const router = useRouter();
 const userStore = useUserStore();
 
-// Nav links based on role
-// const navLinks = [
-//   { name: 'Home', path: '/' },
-//   { name: 'Posts', path: '/posts' }
-// ]
+// Nav links
+const navLinks = [
+  { name: "Home", path: "/" },
+  { name: "Posts", path: "/posts" },
+];
+
+const isDropdownOpen = ref(false)
+
+// Toggle dropdown manually for mobile support
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value
+}
+
+const logout = () => {
+  isDropdownOpen.value = false // Close dropdown after logout
+  userStore.logout()
+  router.push('/login')
+}
 
 // Dark mode state
 const isDarkMode = ref(document.documentElement.classList.contains("dark"));
 
-// const toggleDarkMode = () => {
-//   isDarkMode.value = !isDarkMode.value;
-//   if (isDarkMode.value) {
-//     document.documentElement.classList.add("dark");
-//     localStorage.setItem("theme", "dark");
-//   } else {
-//     document.documentElement.classList.remove("dark");
-//     localStorage.removeItem("theme");
-//   }
-// };
-
-// onMounted(() => {
-//   const savedTheme = localStorage.getItem("theme");
-//   if (savedTheme === "dark") {
-//     document.documentElement.classList.add("dark");
-//     isDarkMode.value = true;
-//   }
-// });
-
-const logout = () => {
-  userStore.logout();
-  router.push("/login");
+// Toggle dark mode
+const toggleDarkMode = () => {
+  isDarkMode.value = !isDarkMode.value;
+  if (isDarkMode.value) {
+    document.documentElement.classList.add("dark");
+    localStorage.setItem("theme", "dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+    localStorage.removeItem("theme");
+  }
 };
+
+// Load saved theme
+onMounted(() => {
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.documentElement.classList.add("dark");
+    isDarkMode.value = true;
+  } else {
+    document.documentElement.classList.remove("dark");
+    isDarkMode.value = false;
+  }
+});
+
+onMounted(() => {
+  const handleClickOutside = (event) => {
+    const dropdown = document.querySelector('.relative');
+    if (!dropdown?.contains(event.target)) {
+      isDropdownOpen.value = false
+    }
+  }
+
+  document.addEventListener('click', handleClickOutside)
+})
 </script>

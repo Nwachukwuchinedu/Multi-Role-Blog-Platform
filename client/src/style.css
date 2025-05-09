@@ -109,3 +109,17 @@
 .slide-leave-to {
   transform: translateX(-100%);
 }
+
+
+.dark .glass-navbar {
+  background: rgba(25, 25, 25, 0.8);
+  color: white;
+}
+
+.gradient-text {
+  background: linear-gradient(to right, #6366f1, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
