@@ -27,6 +27,14 @@ export const autoCommitAndPush = async (filePath) => {
 
     console.log(`[Git] Adding ${relativePath}`);
 
+    // ✅ Set git config locally (inside repo)
+    await execAsync(`git config user.email "chinedu.simeon2020@gmail.com"`, {
+      cwd: projectRoot,
+    });
+    await execAsync(`git config user.name "Nwachukwuchinedu"`, {
+      cwd: projectRoot,
+    });
+
     // Run git commands inside project root
     await execAsync(`git add "${relativePath}"`, { cwd: projectRoot });
 
