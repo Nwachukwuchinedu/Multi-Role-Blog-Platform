@@ -2,6 +2,8 @@
 import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import User from "../models/User.js";
+import path from "path";
+import { autoCommitAndPush } from "../utils/gitUtils.js";
 
 // @desc    Get all posts
 // @route   GET /api/posts
@@ -73,7 +75,7 @@ const createPost = async (req, res) => {
   const { title, content, tags } = req.body;
 
   try {
-    const post = await Post.create({
+    const newPost = await Post.create({
       title,
       content,
       author: req.user,
@@ -86,12 +88,19 @@ const createPost = async (req, res) => {
         : undefined,
     });
 
-    res.status(201).json(post);
+    // ✅ Trigger Git commit & push with correct path
+    if (req.file) {
+      // ✅ Use req.file.path – which is already correct
+      autoCommitAndPush(req.file.path);
+    }
+
+    res.status(201).json(newPost);
   } catch (error) {
     console.error("Post creation error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // @desc    Update post
 // @route   PUT /api/posts/:id
@@ -121,6 +130,11 @@ const updatePost = async (req, res) => {
         url: `/uploads/${req.file.filename}`,
         alt: "",
       };
+    }
+    // ✅ Trigger Git commit & push with correct path
+    if (req.file) {
+      // ✅ Use req.file.path – which is already correct
+      autoCommitAndPush(req.file.path);
     }
 
     const updatedPost = await post.save();
