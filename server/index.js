@@ -14,7 +14,10 @@ connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://multi-role-blog-platform.onrender.com"],
+  origin: [
+    "http://localhost:5173",
+    "https://multi-role-blog-platform.vercel.app",
+  ],
   optionsSuccessStatus: 200,
 };
 
@@ -34,7 +37,7 @@ app.use(
       res.set(
         "Access-Control-Allow-Origin",
         "http://localhost:5173",
-        "VITE_API_URL=https://multi-role-blog-platform.onrender.com"
+        "https://multi-role-blog-platform.vercel.app"
       );
     },
   })
