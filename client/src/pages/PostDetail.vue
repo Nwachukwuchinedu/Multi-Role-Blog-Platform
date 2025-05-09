@@ -87,7 +87,8 @@ import Loader from "../components/Loader.vue";
 
 const route = useRoute();
 const postId = route.params.id;
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = `${import.meta.env.VITE_API_URL}/public`
+
 
 // Real post data
 const post = ref(null);

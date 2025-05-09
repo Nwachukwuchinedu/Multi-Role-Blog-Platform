@@ -100,7 +100,7 @@ const debug = {
 }
 
 // Base URL for images (optional later)
-const apiUrl = import.meta.env.VITE_API_URL
+const apiUrl = `${import.meta.env.VITE_API_URL}/public`
 
 // Fetch user's own posts
 const fetchPosts = async () => {

@@ -87,7 +87,7 @@ const route = useRoute()
 const router = useRouter()
 
 const postId = route.params.id
-const apiUrl = import.meta.env.VITE_API_URL
+const apiUrl = `${import.meta.env.VITE_API_URL}/public`
 
 // Form state
 const post = ref({
