@@ -1,8 +1,8 @@
 curl -X POST http://localhost:5000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "username": "johndoe",
-    "email": "john@example.com",
+    "username": "johndoje",
+    "email": "jhohn@example.com",
     "password": "123456",
     "role": "reader"
   }'
@@ -11,10 +11,10 @@ curl -X POST http://localhost:5000/api/auth/register \
 curl -X POST http://localhost:5000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
-    "username": "james",
-    "email": "admin@example.com",
+    "username": "sim",
+    "email": "sim@example.com",
     "password": "123456",
-    "role": "admin"
+    "role": "author"
   }'
 
 ###
@@ -31,7 +31,7 @@ curl -X GET http://localhost:5000/api/users \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA"
 
 ###  Get User by ID 
-curl -X GET http://localhost:5000/api/users/681a8df215e0eabbcb1de009 \
+curl -X GET http://localhost:5000/api/users/681a94588b32dcafe436c4a5 \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE4ZGYyMTVlMGVhYmJjYjFkZTAwOSIsImlhdCI6MTc0NjU3MjUwNywiZXhwIjoxNzQ5MTY0NTA3fQ.CQ05CK7dUGsTGUy91ZU6HbiSra6tA0DcSQqjR2HznaA"
 
 ### Update User (Self or Admin)
@@ -57,21 +57,20 @@ curl -X GET http://localhost:5000/api/posts \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA"
 
 ### Get Post by ID
-curl -X GET http://localhost:5000/api/posts/681a9ca71527ddd4341650ce \
+curl -X GET http://localhost:5000/api/posts/681ab6b8264258bc8a9ac9ed \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA"
 
 ### Create Post 
 curl -X POST http://localhost:5000/api/posts \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA" \
--H "Content-Type: application/json" \
--d '{
-  "title": "My First Blog Post",
-  "content": "<p>This is my first blog post using Vue + Express!</p>",
-  "tags": ["vue", "express"]
-}'
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWMxMTJjNmVlNDhiMmE3NjFmYWZmMyIsImlhdCI6MTc0NjY2OTg2OCwiZXhwIjoxNzQ5MjYxODY4fQ.whbO1qxOTL8sWkNQ5TCUUv9CU9Xb-9jzyFdqNbC4szo" \
+-F "title=Great Post" \
+-F "content=This  blog post with an image." \
+-F "tags=vue,php,blog" \
+-F "image=@C:/Users/Simeon/OneDrive/Pictures/q.png"
+
 
 ### Update Post 
-curl -X PUT http://localhost:5000/api/posts/681a9ca71527ddd4341650ce \
+curl -X PUT http://localhost:5000/api/posts/681ac050cb81ba362038432e \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA" \
 -H "Content-Type: application/json" \
 -d '{
@@ -80,16 +79,16 @@ curl -X PUT http://localhost:5000/api/posts/681a9ca71527ddd4341650ce \
 }'
 
 ### Delete Post
-curl -X DELETE http://localhost:5000/api/posts/681a9ca71527ddd4341650ce \
+curl -X DELETE http://localhost:5000/api/posts/681ab6b8264258bc8a9ac9ed \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA"
 
 
 ### Like or Unlike Post
-curl -X POST http://localhost:5000/api/posts/like/681a9ca71527ddd4341650ce \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA"
+curl -X POST http://localhost:5000/api/posts/like/681ab6b8264258bc8a9ac9ed \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5YTRjMTUyN2RkZDQzNDE2NTBjNSIsImlhdCI6MTc0NjY2ODM5NCwiZXhwIjoxNzQ5MjYwMzk0fQ.pW-6a33PE5Y3wdFJ7YOuQozMJfEu4xMK6CRrFKN07ow"
 
 ### Comment on Post
-curl -X POST http://localhost:5000/api/posts/comment/681a9ca71527ddd4341650ce \
+curl -X POST http://localhost:5000/api/posts/comment/681ab6b8264258bc8a9ac9ed \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA"
 -H "Content-Type: application/json" \
 -d '{
@@ -97,7 +96,7 @@ curl -X POST http://localhost:5000/api/posts/comment/681a9ca71527ddd4341650ce \
 }'
 
 ### Get Comment by ID
-curl -X GET http://localhost:5000/api/comments/681a9dc21527ddd4341650db \
+curl -X GET http://localhost:5000/api/comments/681c202c21ca545077cb87f5 \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA"
 
 ### Update Comment (Own or Admin)
@@ -121,8 +120,8 @@ curl -X GET http://localhost:5000/api/admin/posts \
 -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA"
 
 ### Delete Any Post
-curl -X DELETE http://localhost:5000/api/admin/posts/POST_ID_HERE \
--H "Authorization: Bearer YOUR_ADMIN_JWT_TOKEN_HERE"
+curl -X DELETE http://localhost:5000/api/admin/posts/681ac050cb81ba362038432e \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MWE5NDU4OGIzMmRjYWZlNDM2YzRhNSIsImlhdCI6MTc0NjU3MjM3NiwiZXhwIjoxNzQ5MTY0Mzc2fQ.eJdwuwFuJ9y402Oc5tL1qjFa1oKMiLAp1tACbOfxtMA"
 
 ### Ban Any User
 curl -X POST http://localhost:5000/api/admin/ban-user/681a9a4c1527ddd4341650c5 \

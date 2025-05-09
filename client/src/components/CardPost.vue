@@ -38,7 +38,7 @@
 <script setup>
 import { defineProps } from "vue";
 
-const apiUrl = import.meta.env.VITE_API_URL
+const apiUrl = `${import.meta.env.VITE_API_URL}/public`;
 
 const props = defineProps({
   post: {

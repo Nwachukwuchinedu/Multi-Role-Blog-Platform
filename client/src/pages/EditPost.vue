@@ -1,13 +1,24 @@
 <template>
   <div class="max-w-3xl mx-auto px-4 py-8">
     <!-- Title -->
-    <h1 class="text-2xl font-bold font-title text-gray-900 dark:text-white mb-6">Edit Post</h1>
+    <h1
+      class="text-2xl font-bold font-title text-gray-900 dark:text-white mb-6"
+    >
+      Edit Post
+    </h1>
 
     <!-- Form -->
-    <form @submit.prevent="updatePost" class="space-y-6 bg-white dark:bg-gray-800 shadow rounded-lg p-6 transition-all duration-300">
+    <form
+      @submit.prevent="updatePost"
+      class="space-y-6 bg-white dark:bg-gray-800 shadow rounded-lg p-6 transition-all duration-300"
+    >
       <!-- Title -->
       <div>
-        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Post Title</label>
+        <label
+          for="title"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >Post Title</label
+        >
         <input
           id="title"
           v-model="post.title"
@@ -20,7 +31,11 @@
 
       <!-- Content -->
       <div>
-        <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Content</label>
+        <label
+          for="content"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >Content</label
+        >
         <textarea
           id="content"
           v-model="post.content"
@@ -33,7 +48,11 @@
 
       <!-- Tags -->
       <div>
-        <label for="tags" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tags (comma-separated)</label>
+        <label
+          for="tags"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >Tags (comma-separated)</label
+        >
         <input
           id="tags"
           v-model="post.tags"
@@ -45,7 +64,11 @@
 
       <!-- Image Upload -->
       <div>
-        <label for="image" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Change Featured Image</label>
+        <label
+          for="image"
+          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >Change Featured Image</label
+        >
         <input
           id="image"
           type="file"
@@ -53,14 +76,22 @@
           @change="onImageChange"
           class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white"
         />
-        <small class="text-gray-500 dark:text-gray-400 mt-1 block">Supported formats: JPG, PNG, GIF</small>
+        <small class="text-gray-500 dark:text-gray-400 mt-1 block"
+          >Supported formats: JPG, PNG, GIF</small
+        >
       </div>
 
       <!-- Current Image Preview -->
       <div v-if="post.image" class="mt-4">
-        <h2 class="text-lg font-heading font-semibold text-gray-800 dark:text-gray-300 mb-2">Current Image</h2>
+        <h2
+          class="text-lg font-heading font-semibold text-gray-800 dark:text-gray-300 mb-2"
+        >
+          Current Image
+        </h2>
         <img
-          :src="`${apiUrl}${post.image}`"
+          :src="
+            isBase64Image(post.image) ? post.image : `${apiUrl}${post.image}`
+          "
           alt="Current post image"
           class="w-full max-h-60 object-cover rounded-md shadow"
         />
@@ -79,111 +110,109 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import apiClient from '../services/apiClient'
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import apiClient from "../services/apiClient";
 
-const route = useRoute()
-const router = useRouter()
+const route = useRoute();
+const router = useRouter();
 
-const postId = route.params.id
-const apiUrl = `${import.meta.env.VITE_API_URL}/public`
+const postId = route.params.id;
+const apiUrl = `${import.meta.env.VITE_API_URL}/public`;
 
 // Form state
 const post = ref({
-  title: '',
-  content: '',
-  tags: '',
-  image: null
-})
+  title: "",
+  content: "",
+  tags: "",
+  image: null,
+});
 
-const loading = ref(false)
-const file = ref(null)
+const loading = ref(false);
+const file = ref(null);
 
 // Load post on mount
 const fetchPost = async () => {
   try {
-    const response = await apiClient.get(`/posts/${postId}`)
+    const response = await apiClient.get(`/posts/${postId}`);
 
     // Set initial values
     post.value = {
       title: response.data.title,
       content: response.data.content,
-      tags: response.data.tags.join(','),
-      image: response.data.image?.url || null
-    }
-
+      tags: response.data.tags.join(","),
+      image: response.data.image?.url || null,
+    };
   } catch (err) {
-    showNotification('Failed to load post.', 'error')
-    setTimeout(() => router.push('/'), 2000)
+    showNotification("Failed to load post.", "error");
+    setTimeout(() => router.push("/"), 2000);
   }
-}
+};
 
 onMounted(() => {
-  fetchPost()
-})
+  fetchPost();
+});
 
 // Handle image selection
 const onImageChange = (event) => {
-  const selectedFile = event.target.files[0]
+  const selectedFile = event.target.files[0];
   if (selectedFile) {
-    const reader = new FileReader()
+    const reader = new FileReader();
 
     reader.onload = (e) => {
-      post.value.image = e.target.result
-    }
+      post.value.image = e.target.result;
+    };
 
-    reader.readAsDataURL(selectedFile)
-    file.value = selectedFile
+    reader.readAsDataURL(selectedFile);
+    file.value = selectedFile;
   }
-}
+};
 
 // Update post
 const updatePost = async () => {
   try {
-    loading.value = true
+    loading.value = true;
 
-    const formData = new FormData()
-    formData.append('title', post.value.title)
-    formData.append('content', post.value.content)
-    formData.append('tags', post.value.tags)
+    const formData = new FormData();
+    formData.append("title", post.value.title);
+    formData.append("content", post.value.content);
+    formData.append("tags", post.value.tags);
 
     if (file.value) {
-      formData.append('image', file.value)
+      formData.append("image", file.value);
     }
 
     await apiClient.put(`/posts/${postId}`, formData, {
       headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-    showNotification('Post updated successfully!', 'success')
+    showNotification("Post updated successfully!", "success");
     setTimeout(() => {
-      router.push(`/post/${postId}`)
-    }, 1500)
-
+      router.push(`/post/${postId}`);
+    }, 1500);
   } catch (err) {
-    showNotification('Failed to update post.', 'error')
-    loading.value = false
-    console.error(err)
+    showNotification("Failed to update post.", "error");
+    loading.value = false;
+    console.error(err);
   }
-}
+};
 
-function showNotification(message, type = 'success') {
-  const container = document.createElement('div')
+function showNotification(message, type = "success") {
+  const container = document.createElement("div");
   container.className = `
     fixed bottom-4 right-4 px-4 py-2 rounded-md shadow-lg z-50
-    ${type === 'success' ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}
+    ${type === "success" ? "bg-green-500 text-white" : "bg-red-500 text-white"}
     transform transition-all duration-300 ease-in-out
     animate-fade-in-up
-  `
-  container.textContent = message
-  document.body.appendChild(container)
+  `;
+  container.textContent = message;
+  document.body.appendChild(container);
 
   setTimeout(() => {
-    container.classList.add('opacity-0', 'translate-y-2')
-    setTimeout(() => container.remove(), 300)
-  }, 2500)
+    container.classList.add("opacity-0", "translate-y-2");
+    setTimeout(() => container.remove(), 300);
+  }, 2500);
 }
 </script>
