@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-5xl mx-auto px-4 py-8">
+  <div class="max-w-5xl mx-auto px-10 py-8">
     <!-- Page Title -->
     <h1 class="text-2xl font-bold font-title text-gray-900 dark:text-white mb-6">
       My Posts
