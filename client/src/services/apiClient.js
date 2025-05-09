@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useUserStore } from "../stores/useUserStore";
 
+const BASE_URL = import.meta.env.VITE_API_URL;
+ // Mock base URL
 const apiClient = axios.create({
-  baseURL: "http://localhost:5000/api", // Mock base URL
+  baseURL: `${BASE_URL}/api`, // Mock base URL
   headers: {
     "Content-Type": "application/json",
   },
