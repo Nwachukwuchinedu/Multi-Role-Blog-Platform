@@ -1,10 +1,10 @@
-curl -X POST http://localhost:5000/api/auth/register \
+curl -X POST https://multi-role-blog-platform.onrender.com/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "username": "johndoje",
-    "email": "jhohn@example.com",
+    "email": "jhoah@example.com",
     "password": "123456",
-    "role": "reader"
+    "role": "author"
   }'
 
 ###
@@ -136,3 +136,16 @@ curl -X POST http://localhost:5000/api/posts \
 -F "tags=vue,nodejs,blog" \
 -F "image=@C:/Users/Simeon/OneDrive/Pictures/q.png"
 
+
+curl -X PUT http://localhost:5000/api/posts/682160ebe343a1c2d1775fd4 \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjE2NDhiZGVlNTgzZGJjZjUzNTJiMiIsImlhdCI6MTc0NzAxODg5MiwiZXhwIjoxNzQ5NjEwODkyfQ.HV_DRV524BuLTQDo1xt9szXUrxVAIvV9fHdbmhBPsTQ" \
+-F "tags=vue,nodejs,blog" \
+-F "image=@C:/Users/Simeon/OneDrive/Pictures/q.png"
+
+###
+curl -X POST https://multi-role-blog-platform.onrender.com/api/posts \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjE4NzgwZjczOGEwZjZiN2EzNjZlZSIsImlhdCI6MTc0NzAyNzg0MSwiZXhwIjoxNzQ5NjE5ODQxfQ.cfIV85q9PQu2tITcxhQbhk3LQ14RbZ-PQ3FG3k0HZoA" \
+-F "title=My New Post" \
+-F "content=This is my first blog post with an image." \
+-F "tags=vue,nodejs,blog" \
+-F "image=@C:/Users/Simeon/OneDrive/Pictures/q.png"
