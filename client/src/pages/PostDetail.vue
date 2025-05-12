@@ -28,7 +28,7 @@
       <!-- Featured Image -->
       <section v-if="post.image" class="glass-card overflow-hidden rounded-xl">
         <img
-          :src="`${apiUrl}${post.image.url}`"
+          :src="post.image.url"
           :alt="post.image.alt || 'Post Image'"
           class="w-full h-auto object-cover"
         />
