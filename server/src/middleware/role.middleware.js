@@ -17,7 +17,6 @@ export const isAuthor = async (req, res, next) => {
   next();
 };
 
-
 export const isAuthorOrAdmin = async (req, res, next) => {
   const user = await User.findById(req.user);
   if (!user || !["author", "admin"].includes(user.role)) {
