@@ -3,11 +3,7 @@
   <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
     <!-- Image -->
     <img
-      :src="
-        post.image
-          ? `${apiUrl}${post.image}`  
-          : '/images/placeholder.jpg'
-      "
+      :src="post?.image"
       :alt="post.title"
       class="w-full h-40 object-cover"
     />

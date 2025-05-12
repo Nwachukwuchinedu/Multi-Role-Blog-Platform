@@ -101,7 +101,7 @@ const fetchPosts = async () => {
       id: post._id,
       title: post.title,
       summary: post.content.substring(0, 100) + "...",
-      author: post.author.username,
+      author: post.author?.username || "Unknown Author",
       date: post.createdAt,
       image: post.image?.url,
     }));

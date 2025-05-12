@@ -44,7 +44,7 @@
         <!-- Image Preview -->
         <div class="md:w-20 md:h-20 w-full h-24 mb-4 md:mb-0 md:mr-4 flex-shrink-0 overflow-hidden rounded-md">
           <img
-            :src="`${apiUrl}${post.image?.url}`"
+            :src="post.image?.url"
             :alt="post.title"
             class="w-full h-full object-cover"
           />

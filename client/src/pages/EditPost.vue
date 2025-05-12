@@ -89,9 +89,7 @@
           Current Image
         </h2>
         <img
-          :src="
-            isBase64Image(post.image) ? post.image : `${apiUrl}${post.image}`
-          "
+          :src="post?.image"
           alt="Current post image"
           class="w-full max-h-60 object-cover rounded-md shadow"
         />
