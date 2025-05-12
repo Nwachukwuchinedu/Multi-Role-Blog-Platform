@@ -3,8 +3,8 @@ import Post from "../models/Post.js";
 import Comment from "../models/Comment.js";
 import User from "../models/User.js";
 import path from "path";
-import { autoCommitAndPush } from "../utils/gitUtils.js";
-
+import { supabase } from "../utils/supabase.utils.js";
+import mongoose from "mongoose";
 // @desc    Get all posts
 // @route   GET /api/posts
 const getPosts = async (req, res) => {
@@ -69,79 +69,97 @@ const getPostById = async (req, res) => {
   }
 };
 
-// @desc    Create new post
-// @route   POST /api/posts
-const createPost = async (req, res) => {
-  const { title, content, tags } = req.body;
+/**
+ * Create a new post
+ */
 
+/**
+ * Uploads a base64-encoded image to Supabase Storage
+ */
+async function uploadImageToSupabase(buffer, filename) {
+  const mimeType = "image/png"; // Or detect based on file type
+
+  const { data, error } = await supabase.storage
+    .from("post-images") // Bucket name
+    .upload(filename, buffer, {
+      contentType: mimeType,
+      upsert: false,
+    });
+
+  if (error) throw error;
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("post-images").getPublicUrl(filename);
+  return publicUrl;
+}
+
+/**
+ * Create new post
+ */
+const createPost = async (req, res) => {
   try {
+    const { title, content, tags } = req.body;
+    const file = req.file;
+
+    let imageUrl = null;
+
+    if (file) {
+      const filename = `images/${Date.now()}-${file.originalname}`;
+      imageUrl = await uploadImageToSupabase(file.buffer, filename);
+    }
+
     const newPost = await Post.create({
       title,
       content,
       author: req.user,
       tags: tags ? tags.split(",") : [],
-      image: req.file
-        ? {
-            url: `/uploads/${req.file.filename}`,
-            alt: "",
-          }
-        : undefined,
+      image: imageUrl ? { url: imageUrl } : undefined,
     });
 
-    // ✅ Trigger Git commit & push with correct path
-    if (req.file) {
-      // ✅ Use req.file.path – which is already correct
-      autoCommitAndPush(req.file.path);
-    }
-
     res.status(201).json(newPost);
-  } catch (error) {
-    console.error("Post creation error:", error);
-    res.status(500).json({ message: "Server error" });
+  } catch (err) {
+    console.error("🚨 Post creation error:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
 
-// @desc    Update post
-// @route   PUT /api/posts/:id
+/**
+ * Update an existing post
+ */
 const updatePost = async (req, res) => {
-  const { title, content, tags } = req.body;
-
+  const { title, content, tags, image } = req.body;
+  const file = req.file;
   try {
     const post = await Post.findById(req.params.id);
 
-    if (!post) return res.status(404).json({ message: "Post not found" });
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
 
     const user = await User.findById(req.user);
-    if (
-      !user ||
-      (post.author.toString() !== req.user && user.role !== "admin")
-    ) {
-      return res.status(403).json({ message: "Access denied" });
-    }
 
+    // Update basic fields
     post.title = title || post.title;
     post.content = content || post.content;
-    post.tags = tags || post.tags;
+    post.tags = tags ? tags.split(",") : post.tags;
 
-    // If image uploaded, update it
-    if (req.file) {
-      post.image = {
-        url: `/uploads/${req.file.filename}`,
-        alt: "",
-      };
-    }
-    // ✅ Trigger Git commit & push with correct path
-    if (req.file) {
-      // ✅ Use req.file.path – which is already correct
-      autoCommitAndPush(req.file.path);
+    // Handle image update
+
+    let imageUrl = null;
+
+    if (file) {
+      const filename = `images/${Date.now()}-${file.originalname}`;
+      imageUrl = await uploadImageToSupabase(file.buffer, filename);
+      post.image = { url: imageUrl };
     }
 
     const updatedPost = await post.save();
     res.json(updatedPost);
   } catch (error) {
-    console.error("Post update error:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error("🚨 Post update error:", error.message);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
