@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="max-w-3xl mx-auto px-4 py-8">
     <!-- Title -->
     <h1 class="text-2xl font-bold font-title text-gray-900 dark:text-white mb-6">Write a New Post</h1>
